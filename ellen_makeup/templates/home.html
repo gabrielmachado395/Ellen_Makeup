@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/css.css' %}">
+{% block title %}Página Inicial{% endblock %}
+
+{% block content %}
+<body>
+    <h1 class="titulo-pagina">Produtos</h1>
+    <div class="produtos-container">
+        {% for produto in produtos %}
+            <a href="{% url 'produto_detalhes' produto.id %}" class="produto-link">
+                <div class="produto-card">
+                    <img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}" class="produto-imagem">
+                    <div class="produto-info">
+                        <h2 class="produto-nome">{{ produto.nome }}</h2>
+                        <p class="produto-preço">R${{ produto.preço }}</p>
+                        <p class="produto-descrição">{{ produto.descrição|truncatewords:5 }}</p>
+                    </div>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+</body>
+{% endblock %}
+

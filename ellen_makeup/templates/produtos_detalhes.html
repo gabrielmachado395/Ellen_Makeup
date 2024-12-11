@@ -1,0 +1,21 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-bt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/css.css' %}">
+</head>
+<body>
+    <div class="produto-detalhes-container">
+        <h1>{{ produto.nome }}</h1>
+        <img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}" class="produto-detalhes-imagem">
+        <p class="produto-detalhes-preço">R${{ produto.preço }}</p>
+        <p class="produto-detalhes-descrição">{{ produto.descrição }}</p>
+        <a href="{% url 'adicionar_ao_carrinho' produto.id %}" class="btn btn-primary">Adicionar ao Carrinho</a>
+        <a href="{% url 'home' %}" class="btn btn-primary">Voltar para a Página Inicial</a>
+
+        <a href="{% url 'ver_carrinho' %}" class="btn btn-secondary">Ver Carrinho</a>
+    </div>
+</body>
+</html>

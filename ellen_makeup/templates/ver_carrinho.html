@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/css.css' %}">
+</head>
+<body>
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li class="message {{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <div class="carrinho-container">
+        <h1 class="carrinho-titulo">Carrinho de compras</h1>
+        <a href="#" class="desmarcar-link">Desmarcar todos os itens</a>
+
+        {% for item in carrinho.itens.all %}
+        <div class="carrinho-item">
+            <input type="checkbox" class="selecionar-item" name="selecionados" value="{{ item.id }}">
+            <img src="{{ item.produto.imagem.url }}" alt="{{ item.produto.nome }}" class="carrinho-item-imagem">
+            
+            <div class="carrinho-item-detalhes">
+                <h2 class="carrinho-item-nome">{{ item.produto.nome }}</h2>
+                <p class="carrinho-item-preco">
+                    {% if item.produto.estoque > 0 %}
+                        Em estoque
+                    {% else %}
+                        Fora de estoque
+                    {% endif %}
+                </p>
+                
+                <div class="carrinho-item-detalhes">
+                    <form method="POST" action="{% url 'atualizar_quantidade' item.id %}">
+                        {% csrf_token %}
+                        <button type="submit" name="acao" value="diminuir" class="btn-quantidade">-</button>
+                        <span class="quantidade">{{ item.quantidade }}</span>
+                        <button type="submit" name="acao" value="aumentar" class="btn-quantidade">+</button>
+                    </form>
+                </div>
+
+                <div class="carrinho-item-opcoes">
+                    <form method="POST" action="{% url 'remover_do_carrinho' item.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="carrinho-item-excluir">Excluir</button>
+                    </form>
+                    <a href="#" class="carrinho-item-salvar">Salvar para mais tarde</a>
+                    <a href="#" class="carrinho-item-compartilhar">Compartilhar</a>
+                </div>
+            </div>
+
+            <p class="carrinho-item-preco">R${{ item.total|floatformat:2 }}</p>
+        </div>
+        {% endfor %}
+    
+        <div class="carrinho-resumo">
+            <p class="subtotal">Subtotal (<span class="total-produtos">{{ carrinho.itens.all|length }} produtos</span>):
+            <span class="subtotal-valor">R${{ carrinho.total|floatformat:2 }}</span></p>
+            <form method="POST" action="{% url 'finalizar_pedido' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn-fechar-pedido">Fechar pedido</button>
+            </form>
+        </div>
+    </div>
+    </body>
+</html>
